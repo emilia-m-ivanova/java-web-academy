@@ -21,7 +21,7 @@ public class Player extends User{
                 .sum();
     }
 
-    public void takeQuiz(QuizResult quizResult){
+    public void addQuizResult (QuizResult quizResult){
         results.add(quizResult);
     }
 

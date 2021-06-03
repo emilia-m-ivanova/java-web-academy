@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Quiz extends AbstractEntity<Long,Quiz>{
@@ -7,7 +8,7 @@ public class Quiz extends AbstractEntity<Long,Quiz>{
     private String title; // - string 2 to 80 characters long;
     private User author; // - the User that created the Quiz;
     private String description; // - string 20 - 250 characters long, supporting Markdown syntax;
-    private List<Question> questions; // - list of Question entities (containing the answers with their scores too);
+    private List<Question> questions = new ArrayList<>(); // - list of Question entities (containing the answers with their scores too);
     private int expectedDuration; // - integer number in minutes;
     private String picture = "default picture"; // (optional) - best representing the Quiz, valid URL to a picture, if missing a placeholder picture should be used;
     private String tags; // - string including comma separated tags, allowing to find the Quizes by quick search;
@@ -94,6 +95,10 @@ public class Quiz extends AbstractEntity<Long,Quiz>{
 
     public void setTags(String tags) {
         this.tags = tags;
+    }
+
+    public void addQuestion(Question question){
+        this.questions.add(question);
     }
 
     @Override

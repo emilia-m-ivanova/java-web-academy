@@ -46,6 +46,10 @@ public class User extends AbstractEntity<Long,User>{
         this.password = password;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
     public Gender getGender() {
         return gender;
     }
