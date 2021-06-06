@@ -7,6 +7,9 @@ public class Player extends User{
     private List<QuizResult>results = new ArrayList<>(); // - list of all QuizResults from Quizzes the Player has taken;
     private int overallScore;// - integer number representing Player's experience (sum of all scores form Quizzes taken), to be transformed to Rank enumeration, using formula chosen by you.
 
+    public Player() {
+    }
+
     public Player(String username, String email, String password, Gender gender) {
         super(username, email, password, gender);
     }

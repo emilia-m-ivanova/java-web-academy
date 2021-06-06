@@ -6,10 +6,7 @@ import exception.EntityAlreadyExistsException;
 import exception.EntityNotFoundException;
 import model.Identifiable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class RepositoryMemoryImpl<K, V extends Identifiable<K>> implements Repository<K, V> {
@@ -45,6 +42,20 @@ public class RepositoryMemoryImpl<K, V extends Identifiable<K>> implements Repos
         }
         entities.put(entity.getId(), entity);
         return entity;
+    }
+
+    @Override
+    public int createFromMemory(Collection<V> entityCollection) throws EntityAlreadyExistsException {
+        int n = 0;
+        for(V entity: entityCollection) {
+            if (entities.putIfAbsent(entity.getId(), entity) != null) {
+                throw new EntityAlreadyExistsException(
+                        String.format("Entity with ID='%s' already exists.", entity.getId()));
+            } else {
+                n++;
+            }
+        }
+        return n;
     }
 
     @Override
