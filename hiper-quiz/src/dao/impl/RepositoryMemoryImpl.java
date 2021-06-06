@@ -78,4 +78,9 @@ public class RepositoryMemoryImpl<K, V extends Identifiable<K>> implements Repos
         }
         return old;
     }
+
+    @Override
+    public void updateKeyGenerator(K entitiesCount) {
+        this.keyGenerator.setInitialValue(entitiesCount);
+    }
 }

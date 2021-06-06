@@ -15,4 +15,6 @@ public interface Repository<K, V extends Identifiable<K>> {
     int createFromMemory (Collection<V> entity) throws EntityAlreadyExistsException;
     V update(V entity) throws EntityNotFoundException;
     V deleteById(K id) throws EntityNotFoundException;
+
+    void updateKeyGenerator(K playersCount);
 }

@@ -4,6 +4,7 @@ import dao.PlayerRepository;
 import model.Player;
 import util.PrintUtil;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -13,10 +14,12 @@ import static util.Alignment.*;
 import static util.Alignment.CENTER;
 
 public class ShowResultDashboardCommand implements Command{
-    PlayerRepository playerRepository;
+    private PlayerRepository playerRepository;
+    private PrintStream out;
 
-    public ShowResultDashboardCommand(PlayerRepository playerRepository) {
+    public ShowResultDashboardCommand(PlayerRepository playerRepository, PrintStream out) {
         this.playerRepository = playerRepository;
+        this.out = out;
     }
 
     @Override
@@ -33,6 +36,6 @@ public class ShowResultDashboardCommand implements Command{
                         .sorted(Comparator.comparingInt(Player::getOverallScore).reversed())
                         .limit(5).collect(Collectors.toList()),
                 "Player Report");
-        System.out.println(playerReport);
+        out.println(playerReport);
     }
 }

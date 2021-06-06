@@ -28,10 +28,13 @@ public class LoadEntitiesCommand implements Command{
     public void action() {
         try(ObjectInputStream ois = new ObjectInputStream(in)){
             AllCollections allCollections = (AllCollections) ois.readObject();
-            playerRepository.createFromMemory(allCollections.getPlayers());
-            quizRepository.createFromMemory(allCollections.getQuizzes());
-            quizResultRepository.createFromMemory(allCollections.getQuizResults());
-           // return "All collections loaded successfully";
+            long playersCount = playerRepository.createFromMemory(allCollections.getPlayers());
+            playerRepository.updateKeyGenerator(playersCount);
+            long quizzesCount = quizRepository.createFromMemory(allCollections.getQuizzes());
+            quizRepository.updateKeyGenerator(quizzesCount);
+            long resultsCount = quizResultRepository.createFromMemory(allCollections.getQuizResults());
+            quizResultRepository.updateKeyGenerator(resultsCount);
+            // return "All collections loaded successfully";
         } catch (IOException | ClassNotFoundException | EntityAlreadyExistsException e) {
             e.printStackTrace();
            // return "Error reading collections from file";

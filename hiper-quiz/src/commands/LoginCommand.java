@@ -2,30 +2,35 @@ package commands;
 
 import dao.PlayerRepository;
 import model.Player;
-import view.LoggedUser;
-
+import util.LoggedUser;
+import java.io.PrintStream;
 import java.util.Scanner;
 
 public class LoginCommand implements Command{
     private PlayerRepository playerRepository;
     private Scanner in;
+    private PrintStream out;
 
-    public LoginCommand(PlayerRepository playerRepository, Scanner in) {
+    public LoginCommand(PlayerRepository playerRepository, Scanner in, PrintStream out) {
         this.playerRepository = playerRepository;
         this.in = in;
+        this.out = out;
     }
 
     @Override
     public void action() {
-        System.out.printf("Login Page%nUsername: %n");
+        out.printf("Login Page%nPress enter if you want to go back to the main menu.%nUsername: %n");
         String username = in.nextLine().trim();
-        System.out.println("Password: ");
+        if(username.isEmpty()){
+            return;
+        }
+        out.println("Password: ");
         String password = in.nextLine().trim();
         Player loggedInUser = playerRepository.findByUsernameAndPassword(username, password);
         if (loggedInUser != null) {
             LoggedUser.setUser(loggedInUser);
         } else {
-            System.out.println("Wrong username or password");
+            out.println("Wrong username or password");
         }
     }
 }

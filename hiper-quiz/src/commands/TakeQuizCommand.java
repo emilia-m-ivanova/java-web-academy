@@ -9,6 +9,7 @@ import model.Quiz;
 import model.QuizResult;
 import util.PrintUtil;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -20,48 +21,63 @@ public class TakeQuizCommand implements Command{
     private QuizRepository quizRepository;
     private QuizResultRepository quizResultRepository;
     private Scanner in;
+    private PrintStream out;
     private Player player;
 
-    public TakeQuizCommand(QuizRepository quizRepository, QuizResultRepository quizResultRepository, Scanner in, Player player) {
+    public TakeQuizCommand(QuizRepository quizRepository, QuizResultRepository quizResultRepository, Scanner in, PrintStream out, Player player) {
         this.quizRepository = quizRepository;
         this.quizResultRepository = quizResultRepository;
         this.in = in;
+        this.out = out;
         this.player = player;
     }
 
     @Override
     public void action() {
         printQuizDashboard();
-        System.out.printf("Take Quiz Page%nPlease enter quiz ID: %n");
-        long id = Long.parseLong(in.nextLine().trim());
+        out.printf("Take Quiz Page%nPlease enter quiz ID: %nPress enter if you want to go back to the main menu.%n");
+        String input = in.nextLine().trim();
+        if(input.isEmpty()){
+            return;
+        }
+        long id = Long.parseLong(input);
         Quiz chosenQuiz = quizRepository.findById(id).orElse(null);
         if (chosenQuiz != null) {
             if(chosenQuiz.getAuthor().getId() == player.getId()){
-                System.out.println("You cannot take a quiz that you have created. Please choose another one.");
+                out.println("You cannot take a quiz that you have created. Please choose another one.");
                 this.action();
+                return;
             }
             int result = 0;
             List<Question> questions = chosenQuiz.getQuestions();
             for (Question q : questions) {
-                System.out.printf("%s%nPlease enter your answer", q.toString());
+                out.printf("%s%nPlease enter your answer", q.toString());
                 String answer = in.nextLine().trim();
                 if (q.getAnswers().stream().anyMatch(a->a.getText().equals(answer))) {
                     result += q.getAnswers().stream()
                             .filter(a -> a.getText().equals(answer)).findFirst().get().getScore();
+                    out.println("Good job! This is the correct answer!");
+                } else{
+                    out.println("Sorry, this is the wrong answer");
                 }
             }
             QuizResult quizResult = new QuizResult(player, chosenQuiz, result);
             try {
+                //TODO: add max points for the quiz
                 quizResultRepository.create(quizResult);
+                out.println("Your result is " + quizResult.getScore());
             } catch (EntityAlreadyExistsException e) {
                 e.getMessage();
             }
             player.addQuizResult(quizResult);
-
         } else {
-            System.out.println("There is no quiz available with the given ID.");
+            out.println("There is no quiz available with the given ID.");
             this.action();
         }
+    }
+
+    public void updateUser(Player player) {
+        this.player = player;
     }
 
     private void printQuizDashboard() {
@@ -75,6 +91,6 @@ public class TakeQuizCommand implements Command{
         String quizReport = PrintUtil.formatTable(playerColumns,
                 quizRepository.findAll(),
                 "List of all quizzes");
-        System.out.println(quizReport);
+        out.println(quizReport);
     }
 }

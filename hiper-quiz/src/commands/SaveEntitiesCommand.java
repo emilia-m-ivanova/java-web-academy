@@ -4,6 +4,7 @@ import dao.PlayerRepository;
 import dao.QuizRepository;
 import dao.QuizResultRepository;
 import model.AllCollections;
+import model.Player;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -39,4 +40,5 @@ public class SaveEntitiesCommand implements Command {
           //  return "Error writing collections to file";
         }
     }
+
 }

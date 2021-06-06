@@ -1,6 +1,6 @@
 package commands;
 
-import view.LoggedUser;
+import util.LoggedUser;
 
 public class LogoutCommand implements Command{
     @Override

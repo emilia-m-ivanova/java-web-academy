@@ -1,4 +1,4 @@
-package view;
+package util;
 
 import model.Player;
 
