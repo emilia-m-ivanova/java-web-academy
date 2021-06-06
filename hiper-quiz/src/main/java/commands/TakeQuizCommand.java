@@ -7,6 +7,7 @@ import model.Player;
 import model.Question;
 import model.Quiz;
 import model.QuizResult;
+import util.LoggedUser;
 import util.PrintUtil;
 
 import java.io.PrintStream;
@@ -22,14 +23,12 @@ public class TakeQuizCommand implements Command{
     private QuizResultRepository quizResultRepository;
     private Scanner in;
     private PrintStream out;
-    private Player player;
 
-    public TakeQuizCommand(QuizRepository quizRepository, QuizResultRepository quizResultRepository, Scanner in, PrintStream out, Player player) {
+    public TakeQuizCommand(QuizRepository quizRepository, QuizResultRepository quizResultRepository, Scanner in, PrintStream out) {
         this.quizRepository = quizRepository;
         this.quizResultRepository = quizResultRepository;
         this.in = in;
         this.out = out;
-        this.player = player;
     }
 
     @Override
@@ -43,7 +42,7 @@ public class TakeQuizCommand implements Command{
         long id = Long.parseLong(input);
         Quiz chosenQuiz = quizRepository.findById(id).orElse(null);
         if (chosenQuiz != null) {
-            if(chosenQuiz.getAuthor().getId() == player.getId()){
+            if(chosenQuiz.getAuthor().getId() == LoggedUser.getLoggedUser().getId()){
                 out.println("You cannot take a quiz that you have created. Please choose another one.");
                 this.action();
                 return;
@@ -61,7 +60,7 @@ public class TakeQuizCommand implements Command{
                     out.println("Sorry, this is the wrong answer");
                 }
             }
-            QuizResult quizResult = new QuizResult(player, chosenQuiz, result);
+            QuizResult quizResult = new QuizResult(LoggedUser.getLoggedUser(), chosenQuiz, result);
             try {
                 //TODO: add max points for the quiz
                 quizResultRepository.create(quizResult);
@@ -69,15 +68,11 @@ public class TakeQuizCommand implements Command{
             } catch (EntityAlreadyExistsException e) {
                 e.getMessage();
             }
-            player.addQuizResult(quizResult);
+            LoggedUser.getLoggedUser().addQuizResult(quizResult);
         } else {
             out.println("There is no quiz available with the given ID.");
             this.action();
         }
-    }
-
-    public void updateUser(Player player) {
-        this.player = player;
     }
 
     private void printQuizDashboard() {

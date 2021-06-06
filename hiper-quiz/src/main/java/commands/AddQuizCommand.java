@@ -2,8 +2,8 @@ package commands;
 
 import dao.QuizRepository;
 import exception.EntityAlreadyExistsException;
-import model.Player;
 import model.Quiz;
+import util.LoggedUser;
 
 import java.io.PrintStream;
 import java.util.Scanner;
@@ -12,13 +12,11 @@ public class AddQuizCommand implements Command{
     private QuizRepository quizRepository;
     private Scanner in;
     private PrintStream out;
-    private Player player;
 
-    public AddQuizCommand(QuizRepository quizRepository, Scanner in, PrintStream out, Player player) {
+    public AddQuizCommand(QuizRepository quizRepository, Scanner in, PrintStream out) {
         this.quizRepository = quizRepository;
         this.in = in;
         this.out = out;
-        this.player = player;
     }
 
     @Override
@@ -41,14 +39,10 @@ public class AddQuizCommand implements Command{
             }
         }
         try {
-            Quiz quiz = quizRepository.create(new Quiz(title, player, description, expectedDuration));
-            new AddQuestionsCommand(quizRepository,in,out,player,quiz.getId()).action();
+            Quiz quiz = quizRepository.create(new Quiz(title, LoggedUser.getLoggedUser(), description, expectedDuration));
+            new AddQuestionsCommand(quizRepository,in,out,quiz.getId()).action();
         } catch (EntityAlreadyExistsException e) {
             e.getMessage();
         }
-    }
-
-    public void updateUser(Player player) {
-        this.player = player;
     }
 }

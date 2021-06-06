@@ -2,9 +2,10 @@ package commands;
 
 import dao.QuizRepository;
 import model.Answer;
-import model.Player;
+
 import model.Question;
 import model.Quiz;
+import util.LoggedUser;
 
 import java.io.PrintStream;
 import java.util.Arrays;
@@ -15,22 +16,19 @@ import java.util.stream.Collectors;
 public class AddQuestionsCommand implements Command{
     private QuizRepository quizRepository;
     private Scanner in;
-    private Player player;
     private long quizID = 0;
     private PrintStream out;
 
-    public AddQuestionsCommand(QuizRepository quizRepository, Scanner in, PrintStream out, Player player) {
+    public AddQuestionsCommand(QuizRepository quizRepository, Scanner in, PrintStream out) {
         this.quizRepository = quizRepository;
         this.in = in;
         this.out = out;
-        this.player = player;
     }
 
-    public AddQuestionsCommand(QuizRepository quizRepository, Scanner in, PrintStream out, Player player, long quizID) {
+    public AddQuestionsCommand(QuizRepository quizRepository, Scanner in, PrintStream out, long quizID) {
         this.quizRepository = quizRepository;
         this.in = in;
         this.out = out;
-        this.player = player;
         this.quizID = quizID;
     }
 
@@ -45,7 +43,7 @@ public class AddQuestionsCommand implements Command{
             }
             quizID = Long.parseLong(input);
         }
-        Quiz chosenQuiz = quizRepository.findByIdAndAuthor(quizID, player);
+        Quiz chosenQuiz = quizRepository.findByIdAndAuthor(quizID, LoggedUser.getLoggedUser());
         if (chosenQuiz != null) {
             out.println("Please enter your question");
             String questionString = in.nextLine().trim();
@@ -75,10 +73,6 @@ public class AddQuestionsCommand implements Command{
             quizID=0;
             this.action();
         }
-    }
-
-    public void updateUser(Player player) {
-        this.player = player;
     }
 
 }

@@ -34,11 +34,9 @@ public class LoadEntitiesCommand implements Command{
             quizRepository.updateKeyGenerator(quizzesCount);
             long resultsCount = quizResultRepository.createFromMemory(allCollections.getQuizResults());
             quizResultRepository.updateKeyGenerator(resultsCount);
-            // return "All collections loaded successfully";
         } catch (IOException | ClassNotFoundException | EntityAlreadyExistsException e) {
             e.printStackTrace();
-           // return "Error reading collections from file";
-        } // return "Error adding entities to repository";
+        }
 
     }
 }

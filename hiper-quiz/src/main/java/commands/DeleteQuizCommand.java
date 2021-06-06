@@ -2,8 +2,8 @@ package commands;
 
 import dao.QuizRepository;
 import exception.EntityNotFoundException;
-import model.Player;
 import model.Quiz;
+import util.LoggedUser;
 
 import java.io.PrintStream;
 import java.util.Scanner;
@@ -11,14 +11,12 @@ import java.util.Scanner;
 public class DeleteQuizCommand implements Command{
     private QuizRepository quizRepository;
     private Scanner in;
-    private Player player;
     private PrintStream out;
 
-    public DeleteQuizCommand(QuizRepository quizRepository, Scanner in, PrintStream out, Player player) {
+    public DeleteQuizCommand(QuizRepository quizRepository, Scanner in, PrintStream out) {
         this.quizRepository = quizRepository;
         this.in = in;
         this.out = out;
-        this.player = player;
     }
 
     @Override
@@ -29,7 +27,7 @@ public class DeleteQuizCommand implements Command{
             return;
         }
         long id = Long.parseLong(input);
-        Quiz chosenQuiz = quizRepository.findByIdAndAuthor(id, player);
+        Quiz chosenQuiz = quizRepository.findByIdAndAuthor(id, LoggedUser.getLoggedUser());
         if (chosenQuiz != null) {
             try {
                 quizRepository.deleteById(id);
@@ -41,10 +39,6 @@ public class DeleteQuizCommand implements Command{
             out.println("You haven't created a quiz with the given ID.");
             this.action();
         }
-    }
-
-    public void updateUser(Player player) {
-        this.player = player;
     }
 
 }

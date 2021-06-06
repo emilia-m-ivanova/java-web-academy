@@ -34,10 +34,8 @@ public class SaveEntitiesCommand implements Command {
                 quizResultRepository.findAll());
         try(ObjectOutputStream oos = new ObjectOutputStream(out)){
             oos.writeObject(allCollections);
-           // return "All collections saved successfully";
         } catch (IOException e) {
             System.out.println(e.getMessage());
-          //  return "Error writing collections to file";
         }
     }
 
