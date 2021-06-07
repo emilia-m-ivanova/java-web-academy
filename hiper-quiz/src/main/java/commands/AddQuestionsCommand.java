@@ -62,6 +62,7 @@ public class AddQuestionsCommand implements Command{
                 String confirmation = in.nextLine().trim();
                 if(confirmation.equals("Y")){
                     this.action();
+                    return;
                 }else if(confirmation.equals("N")){
                     break;
                 }else{
