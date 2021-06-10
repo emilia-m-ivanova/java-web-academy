@@ -8,6 +8,7 @@ public class LoggedUser {
     private LoggedUser() {
     }
 
+    //TODO: refactor class - singleton instance, injected into each command
     private static LoggedUser loggedUser = new LoggedUser();
 
     public static Player getLoggedUser() {

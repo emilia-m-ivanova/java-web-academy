@@ -1,0 +1,2 @@
+DROP SCHEMA IF EXISTS `hiperquiz`;
+CREATE SCHEMA `hiperquiz` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;

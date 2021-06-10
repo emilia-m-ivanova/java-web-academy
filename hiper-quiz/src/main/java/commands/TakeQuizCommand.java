@@ -33,6 +33,7 @@ public class TakeQuizCommand implements Command{
 
     @Override
     public void action() {
+        //TODO: add constraint the same user can take a quiz only once
         printQuizDashboard();
         out.printf("Take Quiz Page%nPlease enter quiz ID: %nPress enter if you want to go back to the main menu.%n");
         String input = in.nextLine().trim();
@@ -69,6 +70,7 @@ public class TakeQuizCommand implements Command{
                 e.getMessage();
             }
             LoggedUser.getLoggedUser().addQuizResult(quizResult);
+            //Todo: print correct answers at the end
         } else {
             out.println("There is no quiz available with the given ID.");
             this.action();
