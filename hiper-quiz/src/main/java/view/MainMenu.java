@@ -4,10 +4,7 @@ import commands.*;
 import dao.QuizRepository;
 import dao.QuizResultRepository;
 import dao.PlayerRepository;
-import dao.impl.LongKeyGenerator;
-import dao.impl.QuizRepositoryImpl;
-import dao.impl.QuizResultRepositoryImpl;
-import dao.impl.PlayerRepositoryImpl;
+import dao.impl.*;
 import util.LoggedUser;
 
 import java.io.*;
@@ -20,7 +17,7 @@ public class MainMenu {
     private static final Map<String, Command> commandsAvailable = new HashMap<>();
     private final Scanner in;
     private final PrintStream out;
-    private PlayerRepository userRepository = new PlayerRepositoryImpl(new LongKeyGenerator());
+    private PlayerRepository userRepository = new PlayerRepositoryJpaImpl();
     private QuizRepository quizRepository = new QuizRepositoryImpl(new LongKeyGenerator());
     private QuizResultRepository quizResultRepository = new QuizResultRepositoryImpl(new LongKeyGenerator());
 
@@ -35,6 +32,8 @@ public class MainMenu {
         commandsAvailable.put("Take quiz", new TakeQuizCommand(quizRepository,quizResultRepository,in,out));
         commandsAvailable.put("Delete quiz", new DeleteQuizCommand(quizRepository,in,out));
         commandsAvailable.put("Show result dashboard", new ShowResultDashboardCommand(userRepository,out));
+        commandsAvailable.put("Change password", new ChangePasswordCommand(userRepository,in,out));
+        commandsAvailable.put("Delete Account", new DeleteAccountCommand(userRepository,out));
         commandsAvailable.put("Logout", new LogoutCommand());
 
         commandsUser.put(1, "Add quiz");
@@ -43,15 +42,18 @@ public class MainMenu {
         commandsUser.put(4, "Delete quiz");
         commandsUser.put(5, "Show result dashboard");
         commandsUser.put(6, "Logout");
-        commandsUser.put(7, "Exit menu");
+        commandsUser.put(7, "Change password");
+        commandsUser.put(8, "Delete Account");
+        commandsUser.put(9, "Exit menu");
 
         commandsGuest.put(1, "Login");
         commandsGuest.put(2, "Register");
         commandsGuest.put(3, "Exit menu");
+        ((PlayerRepositoryJpaImpl)userRepository).init();
     }
     public void start() {
         boolean finish = false;
-        initializeRepositories();
+        //initializeRepositories();
         do {
             out.println("           M A I N    M E N U");
             out.println("*******************************************");
@@ -75,13 +77,13 @@ public class MainMenu {
                 }
             } while (chosenOption <= 0 || chosenOption > commands.size());
             if (commands.get(chosenOption).equals("Exit menu")) {
-                try {
-                    SaveEntitiesCommand saveCommand = new SaveEntitiesCommand(new FileOutputStream("quiz.db"),
-                            userRepository,quizRepository,quizResultRepository);
-                    saveCommand.action();
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    SaveEntitiesCommand saveCommand = new SaveEntitiesCommand(new FileOutputStream("quiz.db"),
+//                            userRepository,quizRepository,quizResultRepository);
+//                    saveCommand.action();
+//                } catch (FileNotFoundException e) {
+//                    e.printStackTrace();
+//                }
                 finish = true;
             }
 

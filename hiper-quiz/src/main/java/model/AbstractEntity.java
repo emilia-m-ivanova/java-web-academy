@@ -1,13 +1,19 @@
 package model;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
+@MappedSuperclass
 public abstract class AbstractEntity<K extends Comparable<K>, V extends Identifiable<K>>
         implements Identifiable<K>, Comparable<V>, Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private K id;
+    @Temporal(TemporalType.TIMESTAMP)
     private Date created = new Date();
+    @Temporal(TemporalType.TIMESTAMP)
     private Date modified = new Date();
 
     public AbstractEntity() {

@@ -1,17 +1,37 @@
 package model;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.List;
 
+@MappedSuperclass
 public class User extends AbstractEntity<Long,User>{
+    @NotNull @Size(min=2, max=15)
+    @Basic(optional = false)
+    @Column(nullable = false, unique = true, length = 15)
     private String username;// - string 2 to 15 characters long - word characters only, unique within the system, cannot be changed;
+    @NotNull
+    @Basic(optional = false)
+    @Column(nullable = false, unique = true, length = 45)
     private String email;// - should be valid email address, unique within the system, cannot be changed;
+    @NotNull @Size(min=8, max=15)
+    @Basic(optional = false)
+    @Column(nullable = false, length = 15)
     private String password;// - string 8 to 15 characters long, at least one digit, one capital letter, and one sign different than letter or digit, NOT sent back to the User clients for security reasons;
+    @Enumerated(EnumType.ORDINAL)
     private Gender gender;// - MALE / FEMALE enumeration;
+    @Enumerated(EnumType.ORDINAL)
     private Role role = Role.PLAYER;// - PLAYER or ADMIN enumeration, PLAYER by default, editable only by Administrators;
+    @Column
     private String picture;// of the user (optional) - valid URL, if missing should ne substituted with an avatar according to the gender;
+    @Column
     private String description;// (optional) - string 20 - 250 characters long;
+    @Column
     private String metadata;// (optional) - string up to 512 characters long, visible and editable only by Administrators;
+    @Column
     private boolean status = true;// - boolean - validity status of the user account;
+    @Transient
     private List<Quiz> quizzes;// - list of all Quizzes created by the current User;
 
     public User() {
