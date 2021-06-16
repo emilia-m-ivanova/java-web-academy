@@ -5,6 +5,9 @@ import dao.QuizRepository;
 import dao.QuizResultRepository;
 import dao.PlayerRepository;
 import dao.impl.*;
+import exception.EntityAlreadyExistsException;
+import model.Gender;
+import model.Player;
 import util.LoggedUser;
 
 import java.io.*;
@@ -33,7 +36,7 @@ public class MainMenu {
         commandsAvailable.put("Delete quiz", new DeleteQuizCommand(quizRepository,in,out));
         commandsAvailable.put("Show result dashboard", new ShowResultDashboardCommand(userRepository,out));
         commandsAvailable.put("Change password", new ChangePasswordCommand(userRepository,in,out));
-        commandsAvailable.put("Delete Account", new DeleteAccountCommand(userRepository,out));
+        commandsAvailable.put("Delete Account", new DeleteAccountCommand(userRepository,in,out));
         commandsAvailable.put("Logout", new LogoutCommand());
 
         commandsUser.put(1, "Add quiz");
@@ -55,6 +58,15 @@ public class MainMenu {
         boolean finish = false;
         //initializeRepositories();
         do {
+//            try {
+//                userRepository.createFromMemory(List.of(
+//                        new Player("valio","valio@valio.com","123werT*", Gender.MALE),
+//                        new Player("daniel","dani@gmail.com","Daniel1*", Gender.MALE),
+//                        new Player("lili","lili@gmail.com","Lily1234%", Gender.FEMALE)
+//                ));
+//            } catch (EntityAlreadyExistsException e) {
+//                e.printStackTrace();
+//            }
             out.println("           M A I N    M E N U");
             out.println("*******************************************");
             Map<Integer, String> commands;

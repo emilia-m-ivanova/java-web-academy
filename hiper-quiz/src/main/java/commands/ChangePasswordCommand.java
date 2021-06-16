@@ -7,6 +7,7 @@ import util.InputUtils;
 import util.LoggedUser;
 
 import java.io.PrintStream;
+import java.util.Date;
 import java.util.Scanner;
 
 public class ChangePasswordCommand implements Command {
@@ -38,8 +39,10 @@ public class ChangePasswordCommand implements Command {
                 newPassword = in.nextLine().trim();
             }
             loggedInUser.setPassword(newPassword);
+            loggedInUser.setModified(new Date());
             try {
                 playerRepository.update(loggedInUser);
+                out.println("You have successfully changed your password");
             } catch (EntityNotFoundException e) {
                 System.out.println(e.getMessage());
             }
